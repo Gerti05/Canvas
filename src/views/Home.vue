@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <LogIn v-if="isSignedIn === false" />
+    <LogIn v-if="user === null" />
     <UserMainPage v-else />
   </div>
 </template>
@@ -13,7 +13,7 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
-  computed: { ...mapState(['isSignedIn']) },
+  computed: { ...mapState(['user']) },
   components: {
     UserMainPage,
     LogIn

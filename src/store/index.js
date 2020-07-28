@@ -1,22 +1,31 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import router from '../router'
+import firebase from 'firebase/app'
+import 'firebase/auth'
+import FirebaseConfig from '../components/firebaseConfig'
+import UserIcon from '../assets/blankUserIcon.svg'
+import { getField, updateField } from 'vuex-map-fields'
+import createPersistedState from 'vuex-persistedstate'
+const app = firebase.initializeApp(FirebaseConfig)
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
+  plugins: [createPersistedState({
+    storage: window.sessionStorage
+  })],
   state: {
-    isSignedIn: false,
+    user: null,
     password: '',
-    passwordRules: [v => !!v || 'Password is required'],
     username: '',
-    usernameRules: [v => !!v || 'Username is required'],
-    email: '',
-    emailRules: [
-      v => !!v || 'E-mail is required',
-      v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-    ]
+    email: ''
+  },
+  getters: {
+    getField
   },
   mutations: {
+    updateField,
     updateEmail (state, email) {
       state.email = email
     },
@@ -26,13 +35,74 @@ export default new Vuex.Store({
     updateUsername (state, username) {
       state.username = username
     },
-    updateIsSignedIn (state) {
-      console.log(state.isSignedIn)
-      state.isSignedIn = !state.isSignedIn
-      console.log(state.isSignedIn)
+    updateIsSignedIn (state, user) {
+      console.log(user, '5')
+      state.user = user
     }
   },
   actions: {
+    logInEmail () {
+      app
+        .auth()
+        .signInWithEmailAndPassword(this.state.email, this.state.password)
+        .then(
+          user => {
+            console.log(user.user.displayName)
+            alert(`You are logged in as ${user.user.displayName}`)
+          },
+          err => {
+            alert(err.message)
+          }
+        )
+    },
+    signUpEmail ({ dispatch }) {
+      app
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.password)
+        .then(
+          user => {
+            console.log(user)
+            dispatch('addUsername')
+            alert(`Account created for ${this.state.username}.`)
+            router.push('/')
+          },
+          err => {
+            alert(err.message)
+          }
+        )
+    },
+    signOut ({ commit }) {
+      app.auth().signOut().then(() => {
+        sessionStorage.clear()
+        commit('updateIsSignedIn', null)
+      },
+      err => {
+        alert(err.message)
+      })
+    },
+    checkUser ({ commit }) {
+      app.auth().onAuthStateChanged(user => {
+        if (user) {
+          commit('updateIsSignedIn', user)
+        } else {
+          commit('updateIsSignedIn', null)
+        }
+      })
+    },
+    addUsername () {
+      app.auth().onAuthStateChanged(user => {
+        if (user) {
+          // Updates the user attributes:
+          console.log(this.state.username)
+          user
+            .updateProfile({
+              // <-- Update Method here
+              displayName: this.state.username,
+              photoURL: UserIcon
+            })
+        }
+      })
+    }
   },
   modules: {
   }

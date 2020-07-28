@@ -1,31 +1,16 @@
 <template>
   <v-container>
-    <div class="textStyle">Hello World</div>
-    <v-btn @click="signOut">Sign Out</v-btn>
+    <div class="textStyle">Hello Gerti</div>
+    <v-btn @submit.prevent @click="signOut">Sign Out</v-btn>
   </v-container>
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/auth'
+import { mapActions } from 'vuex'
 
 export default {
   methods: {
-    signOut (e) {
-      firebase
-        .auth()
-        .signOut()
-        .then(
-          () => {
-            this.$store.commit('updateIsSignedIn')
-            // this.$router.push('/')
-          },
-          err => {
-            alert(err.message)
-          }
-        )
-      e.preventDefault()
-    }
+    ...mapActions(['signOut'])
   }
 }
 </script>

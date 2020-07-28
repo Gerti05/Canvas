@@ -39,6 +39,7 @@
                   block
                   color="success"
                   class="formFont mr-4"
+                  @submit.prevent
                   @click="signUpEmail"
                   ><font-awesome-icon
                     :icon="['fa', 'user-plus']"
@@ -62,80 +63,26 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import FirebaseConfig from './firebaseConfig'
-import UserIcon from '../assets/blankUserIcon.svg'
-import { mapState } from 'vuex'
-const app = firebase.initializeApp(FirebaseConfig)
+
+import { mapActions } from 'vuex'
+import { mapFields } from 'vuex-map-fields'
 
 export default {
+  data: function () {
+    return {
+      passwordRules: [v => !!v || 'Password is required'],
+      usernameRules: [v => !!v || 'Username is required'],
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
+      ]
+    }
+  },
   computed: {
-    email: {
-      get () {
-        return this.$store.state.email
-      },
-      set (value) {
-        this.$store.commit('updateEmail', value)
-      }
-    },
-    password: {
-      get () {
-        return this.$store.state.password
-      },
-      set (value) {
-        this.$store.commit('updatePassword', value)
-      }
-    },
-    username: {
-      get () {
-        return this.$store.state.username
-      },
-      set (value) {
-        this.$store.commit('updateUsername', value)
-      }
-    },
-    ...mapState(['emailRules', 'passwordRules', 'usernameRules'])
+    ...mapFields(['email', 'password', 'username'])
   },
   methods: {
-    signUpEmail (e) {
-      app
-        .auth()
-        .createUserWithEmailAndPassword(this.email, this.password)
-        .then(
-          user => {
-            this.writeUserData(user)
-            console.log(user)
-            alert(`Account created for ${this.username}.`)
-            this.$store.commit('updateIsSignedIn')
-            this.$router.push('/')
-          },
-          err => {
-            alert(err.message)
-          }
-        )
-      e.preventDefault()
-    },
-    writeUserData (user) {
-      app.auth().onAuthStateChanged(user => {
-        if (user) {
-          // Updates the user attributes:
-          console.log(this.username)
-          user
-            .updateProfile({
-              // <-- Update Method here
-              displayName: this.username,
-              photoURL: UserIcon
-            })
-            .then(
-              () => {},
-              err => {
-                alert(err.message)
-              }
-            )
-        }
-      })
-    }
+    ...mapActions(['signUpEmail'])
   }
 }
 </script>

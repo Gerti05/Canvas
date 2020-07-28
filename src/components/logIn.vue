@@ -26,7 +26,7 @@
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-btn block color="success" class="formFont mr-4" @click="logInEmail"
+                <v-btn block color="success" class="formFont mr-4" @submit.prevent @click="logInEmail"
                   ><font-awesome-icon
                     :icon="['fa', 'sign-in-alt']"
                     class="mr-2 mb-1"
@@ -67,47 +67,25 @@
 </template>
 
 <script>
-import firebase from 'firebase/app'
-import 'firebase/auth'
-import { mapState } from 'vuex'
+
+import { mapActions } from 'vuex'
+import { mapFields } from 'vuex-map-fields'
 
 export default {
+  data: function () {
+    return {
+      passwordRules: [v => !!v || 'Password is required'],
+      emailRules: [
+        v => !!v || 'E-mail is required',
+        v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
+      ]
+    }
+  },
   computed: {
-    email: {
-      get () {
-        return this.$store.state.email
-      },
-      set (value) {
-        this.$store.commit('updateEmail', value)
-      }
-    },
-    password: {
-      get () {
-        return this.$store.state.password
-      },
-      set (value) {
-        this.$store.commit('updatePassword', value)
-      }
-    },
-    ...mapState(['emailRules', 'passwordRules'])
+    ...mapFields(['email', 'password'])
   },
   methods: {
-    logInEmail (e) {
-      firebase
-        .auth()
-        .signInWithEmailAndPassword(this.email, this.password)
-        .then(
-          user => {
-            console.log(user.user.displayName)
-            alert(`You are logged in as ${user.user.displayName}`)
-            this.$store.commit('updateIsSignedIn')
-          },
-          err => {
-            alert(err.message)
-          }
-        )
-      e.preventDefault()
-    }
+    ...mapActions(['logInEmail'])
   }
 }
 </script>
