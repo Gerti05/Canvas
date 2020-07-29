@@ -8,6 +8,8 @@ import UserIcon from '../assets/blankUserIcon.svg'
 import { getField, updateField } from 'vuex-map-fields'
 import createPersistedState from 'vuex-persistedstate'
 const app = firebase.initializeApp(FirebaseConfig)
+const providerGoogle = new firebase.auth.GoogleAuthProvider()
+const providerFacebook = new firebase.auth.FacebookAuthProvider()
 
 Vue.use(Vuex)
 
@@ -55,6 +57,36 @@ export default new Vuex.Store({
           }
         )
     },
+    logInGoogle () {
+      app
+        .auth()
+        .signInWithPopup(providerGoogle)
+        .then(user => {
+          console.log(user.user)
+          console.log(router.currentRoute.fullPath)
+          if (router.currentRoute.fullPath !== '/') {
+            router.push('/')
+          }
+        })
+        .catch(err => {
+          alert(err.message)
+        })
+    },
+    logInFacebook () {
+      app
+        .auth()
+        .signInWithPopup(providerFacebook)
+        .then(user => {
+          console.log(user.user)
+          console.log(router.currentRoute.fullPath)
+          if (router.currentRoute.fullPath !== '/') {
+            router.push('/')
+          }
+        })
+        .catch(err => {
+          alert(err.message)
+        })
+    },
     signUpEmail ({ dispatch }) {
       app
         .auth()
@@ -72,13 +104,18 @@ export default new Vuex.Store({
         )
     },
     signOut ({ commit }) {
-      app.auth().signOut().then(() => {
-        sessionStorage.clear()
-        commit('updateIsSignedIn', null)
-      },
-      err => {
-        alert(err.message)
-      })
+      app
+        .auth()
+        .signOut()
+        .then(
+          () => {
+            sessionStorage.clear()
+            commit('updateIsSignedIn', null)
+          },
+          err => {
+            alert(err.message)
+          }
+        )
     },
     checkUser ({ commit }) {
       app.auth().onAuthStateChanged(user => {
@@ -94,16 +131,14 @@ export default new Vuex.Store({
         if (user) {
           // Updates the user attributes:
           console.log(this.state.username)
-          user
-            .updateProfile({
-              // <-- Update Method here
-              displayName: this.state.username,
-              photoURL: UserIcon
-            })
+          user.updateProfile({
+            // <-- Update Method here
+            displayName: this.state.username,
+            photoURL: UserIcon
+          })
         }
       })
     }
   },
-  modules: {
-  }
+  modules: {}
 })

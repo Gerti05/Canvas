@@ -38,7 +38,7 @@
             <div class="formFont separator">OR</div>
             <v-row>
               <v-col cols="12">
-                <v-btn block color="primary" class="formFont mr-4"
+                <v-btn block color="primary" class="formFont mr-4" @submit.prevent @click="logInFacebook"
                   ><font-awesome-icon
                     :icon="['fab', 'facebook-f']"
                     class="mr-2 mb-1"
@@ -47,7 +47,7 @@
                 >
               </v-col>
               <v-col cols="12">
-                <v-btn block color="error" class="formFont mr-4"
+                <v-btn block color="error" class="formFont mr-4" @submit.prevent @click="logInGoogle"
                   ><font-awesome-icon :icon="['fab', 'google']" class="mr-2 mb-1" />
                   Log In</v-btn
                 >
@@ -85,7 +85,7 @@ export default {
     ...mapFields(['email', 'password'])
   },
   methods: {
-    ...mapActions(['logInEmail'])
+    ...mapActions(['logInEmail', 'logInGoogle', 'logInFacebook'])
   }
 }
 </script>
