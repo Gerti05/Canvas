@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import SignUpPage from '../views/SignUpPage.vue'
+import PasswordReset from '../views/passwordReset.vue'
 
 Vue.use(VueRouter)
 
@@ -15,6 +16,11 @@ const routes = [
     path: '/signup',
     name: 'SignUpPage',
     component: SignUpPage
+  },
+  {
+    path: '/password/reset',
+    name: 'PasswordReset',
+    component: PasswordReset
   },
   {
     path: '/about',

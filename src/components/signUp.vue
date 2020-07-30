@@ -15,15 +15,28 @@
                   :rules="emailRules"
                   label="E-mail"
                   required
-                ></v-text-field>
+                ><template slot='append'><span><font-awesome-icon
+                    :icon="['far', 'envelope']"
+                    class="mr-2 mb-1 envelopeStyle"
+                  />
+                  </span></template></v-text-field>
                 <v-text-field
                   class="formFont"
                   v-model="password"
                   :rules="passwordRules"
                   label="Password"
                   required
-                  type="Password"
-                ></v-text-field>
+                  :type="seePassword"
+                ><template slot='append'>
+                  <span @click="passLock()" v-if="passLockIconClosed"><font-awesome-icon
+                    :icon="['fas', 'lock']"
+                    class="mr-2 mb-1 passLockStyle"
+                  /></span>
+                  <span @click="passLock()" v-else><font-awesome-icon
+                    :icon="['fas', 'lock-open']"
+                    class="mr-2 mb-1 passLockStyle"
+                  /></span>
+                  </template></v-text-field>
                 <v-text-field
                   class="formFont"
                   v-model="username"
@@ -95,14 +108,25 @@ export default {
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-      ]
+      ],
+      passLockIconClosed: true,
+      seePassword: 'Password'
     }
   },
   computed: {
     ...mapFields(['email', 'password', 'username'])
   },
   methods: {
-    ...mapActions(['signUpEmail', 'logInGoogle', 'logInFacebook'])
+    ...mapActions(['signUpEmail', 'logInGoogle', 'logInFacebook']),
+    passLock: function () {
+      if (this.passLockIconClosed) {
+        this.seePassword = 'Text'
+        this.passLockIconClosed = false
+      } else {
+        this.seePassword = 'Password'
+        this.passLockIconClosed = true
+      }
+    }
   }
 }
 </script>
@@ -146,5 +170,11 @@ export default {
 .linkStyle {
   text-decoration: none;
   font-weight: bold;
+}
+.passLockStyle, .envelopeStyle {
+  color: inherit;
+}
+.passLockStyle:hover {
+cursor: pointer;
 }
 </style>

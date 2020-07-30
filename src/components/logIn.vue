@@ -5,7 +5,7 @@
         <div class="text--primary logoFont">Canvas</div>
       </v-card-text>
       <v-card-actions>
-        <v-form ref="form">
+        <v-form ref="form" v-model="valid">
           <v-container>
             <v-row>
               <v-col cols="12">
@@ -15,15 +15,28 @@
                   :rules="emailRules"
                   label="E-mail"
                   required
-                ></v-text-field>
+                ><template slot='append'><span><font-awesome-icon
+                    :icon="['far', 'envelope']"
+                    class="mr-2 mb-1 envelopeStyle"
+                  />
+                  </span></template></v-text-field>
                 <v-text-field
                 class="formFont"
                   v-model="password"
                   :rules="passwordRules"
                   label="Password"
-                  type="Password"
+                  :type="seePassword"
                   required
-                ></v-text-field>
+                ><template slot='append'>
+                  <span @click="passLock()" v-if="passLockIconClosed"><font-awesome-icon
+                    :icon="['fas', 'lock']"
+                    class="mr-2 mb-1 passLockStyle"
+                  /></span>
+                  <span @click="passLock()" v-else><font-awesome-icon
+                    :icon="['fas', 'lock-open']"
+                    class="mr-2 mb-1 passLockStyle"
+                  /></span>
+                  </template></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-btn block color="success" class="formFont mr-4" @submit.prevent @click="logInEmail"
@@ -52,6 +65,7 @@
                   Log In</v-btn
                 >
               </v-col>
+                <v-card-text class="formFont cardTextStyle"><router-link to="/password/reset" class="linkStyle">Forgot Password?</router-link></v-card-text>
             </v-row>
           </v-container>
         </v-form>
@@ -74,18 +88,30 @@ import { mapFields } from 'vuex-map-fields'
 export default {
   data: function () {
     return {
+      valid: false,
       passwordRules: [v => !!v || 'Password is required'],
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-      ]
+      ],
+      passLockIconClosed: true,
+      seePassword: 'Password'
     }
   },
   computed: {
     ...mapFields(['email', 'password'])
   },
   methods: {
-    ...mapActions(['logInEmail', 'logInGoogle', 'logInFacebook'])
+    ...mapActions(['logInEmail', 'logInGoogle', 'logInFacebook']),
+    passLock: function () {
+      if (this.passLockIconClosed) {
+        this.seePassword = 'Text'
+        this.passLockIconClosed = false
+      } else {
+        this.seePassword = 'Password'
+        this.passLockIconClosed = true
+      }
+    }
   }
 }
 </script>
@@ -129,5 +155,11 @@ font-weight: bold;
 .linkStyle {
   text-decoration: none;
   font-weight: bold;
+}
+.passLockStyle, .envelopeStyle {
+  color: inherit;
+}
+.passLockStyle:hover {
+cursor: pointer;
 }
 </style>
