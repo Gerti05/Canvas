@@ -4,7 +4,7 @@
       <v-card-text class="cardTextStyle">
         <div class="text--primary logoFont">Canvas</div>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="!linkSent">
         <v-form ref="form" v-model="valid">
           <v-container>
             <v-row>
@@ -30,7 +30,10 @@
                   class="formFont"
                   :disabled="!valid"
                   @submit.prevent
-                  @click="resetPasswordLink"
+                  @click="
+                    resetPasswordLink;
+                    linkSentUpdate();
+                  "
                   ><font-awesome-icon
                     :icon="['fa', 'sign-in-alt']"
                     class="mr-2 mb-1"
@@ -42,6 +45,11 @@
           </v-container>
         </v-form>
       </v-card-actions>
+      <v-row v-else>
+        <v-col cols="12">
+            hello
+        </v-col>
+      </v-row>
       <section class="mt-5">
         <router-link to="/" class="linkStyle"
           ><v-btn block color="grey darken-1" class="formFont backBtnStyle"
@@ -70,14 +78,19 @@ export default {
       emailRules: [
         v => !!v || 'E-mail is required',
         v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-      ]
+      ],
+      linkSent: false
     }
   },
   computed: {
     ...mapFields(['email'])
   },
   methods: {
-    ...mapActions(['resetPasswordLink'])
+    ...mapActions(['resetPasswordLink']),
+    linkSentUpdate: function () {
+      console.log('link sent')
+      this.linkSent = true
+    }
   }
 }
 </script>
