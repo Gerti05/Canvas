@@ -138,6 +138,24 @@ export default new Vuex.Store({
           })
         }
       })
+    },
+    resetPasswordLink ({ state }) {
+      app.auth().sendPasswordResetEmail(state.email).then(() => {
+
+      }).catch(err => {
+        alert(err.message)
+      })
+    },
+    confirmResetPassword ({ state }) {
+      let code = router.currentRoute.fullPath
+      code = code.split('Code=')
+      code = code[1].split('&apiKey')
+      code = code[0]
+      app.auth().confirmPasswordReset(code, state.password).then(() => {
+
+      }).catch(err => {
+        alert(err.message)
+      })
     }
   },
   modules: {}

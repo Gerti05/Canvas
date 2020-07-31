@@ -65,7 +65,7 @@
                   Log In</v-btn
                 >
               </v-col>
-                <v-card-text class="formFont cardTextStyle"><router-link to="/password/reset" class="linkStyle">Forgot Password?</router-link></v-card-text>
+                <v-card-text class="formFont cardTextStyle"><router-link to="/password/reset/link" class="linkStyle">Forgot Password?</router-link></v-card-text>
             </v-row>
           </v-container>
         </v-form>

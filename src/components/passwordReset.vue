@@ -10,18 +10,22 @@
             <v-row>
               <v-col cols="12">
                 <v-text-field
-                  class="formFont"
-                  v-model="email"
-                  :rules="emailRules"
-                  label="E-mail"
+                class="formFont"
+                  v-model="password"
+                  :rules="passwordRules"
+                  label="Password"
+                  :type="seePassword"
                   required
-                  ><template slot="append"
-                    ><span
-                      ><font-awesome-icon
-                        :icon="['far', 'envelope']"
-                        class="mr-2 mb-1 envelopeStyle"
-                      /> </span></template
-                ></v-text-field>
+                ><template slot='append'>
+                  <span @click="passLock()" v-if="passLockIconClosed"><font-awesome-icon
+                    :icon="['fas', 'lock']"
+                    class="mr-2 mb-1 passLockStyle"
+                  /></span>
+                  <span @click="passLock()" v-else><font-awesome-icon
+                    :icon="['fas', 'lock-open']"
+                    class="mr-2 mb-1 passLockStyle"
+                  /></span>
+                  </template></v-text-field>
               </v-col>
               <v-col cols="12">
                 <v-btn
@@ -30,31 +34,18 @@
                   class="formFont"
                   :disabled="!valid"
                   @submit.prevent
-                  @click="resetPasswordLink"
+                  @click="confirmResetPassword"
                   ><font-awesome-icon
                     :icon="['fa', 'sign-in-alt']"
                     class="mr-2 mb-1"
                   />
-                  Send Link</v-btn
+                  Enter New Password</v-btn
                 >
               </v-col>
             </v-row>
           </v-container>
         </v-form>
       </v-card-actions>
-      <section class="mt-5">
-        <router-link to="/" class="linkStyle"
-          ><v-btn block color="grey darken-1" class="formFont backBtnStyle"
-            >Back To Login</v-btn
-          ></router-link
-        >
-      </section>
-    </v-card>
-    <v-card class="formFont mx-auto text-center mt-5" max-width="344">
-      <v-card-text class="cardTextStyle">
-        <div>Need an account?</div>
-        <router-link to="/signup" class="linkStyle">Sign Up</router-link>
-      </v-card-text>
     </v-card>
   </v-container>
 </template>
@@ -67,17 +58,25 @@ export default {
   data: function () {
     return {
       valid: false,
-      emailRules: [
-        v => !!v || 'E-mail is required',
-        v => /.+@.+\..+/.test(v) || 'E-mail must be valid'
-      ]
+      passwordRules: [v => !!v || 'Password is required'],
+      passLockIconClosed: true,
+      seePassword: 'Password'
     }
   },
   computed: {
-    ...mapFields(['email'])
+    ...mapFields(['password'])
   },
   methods: {
-    ...mapActions(['resetPasswordLink'])
+    ...mapActions(['confirmResetPassword']),
+    passLock: function () {
+      if (this.passLockIconClosed) {
+        this.seePassword = 'Text'
+        this.passLockIconClosed = false
+      } else {
+        this.seePassword = 'Password'
+        this.passLockIconClosed = true
+      }
+    }
   }
 }
 </script>
