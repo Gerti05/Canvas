@@ -3,7 +3,7 @@ import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
 import SignUpPage from '../views/SignUpPage.vue'
 import PasswordResetEmail from '../views/PasswordResetEmail.vue'
-import EnterPasswordReset from '../views/EnterPasswordReset.vue'
+import ModeAction from '../views/ModeAction.vue'
 
 Vue.use(VueRouter)
 
@@ -24,9 +24,9 @@ const routes = [
     component: PasswordResetEmail
   },
   {
-    path: '/enter/password/reset/6930275739',
-    name: 'EnterPasswordReset',
-    component: EnterPasswordReset
+    path: '/action',
+    name: 'Action',
+    component: ModeAction
   },
   {
     path: '/about',

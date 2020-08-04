@@ -7,10 +7,10 @@ import vuetify from './plugins/vuetify'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faUserPlus, faSignInAlt, faLock, faLockOpen } from '@fortawesome/free-solid-svg-icons'
 import { faFacebookF, faGoogle } from '@fortawesome/free-brands-svg-icons'
-import { faEnvelope } from '@fortawesome/free-regular-svg-icons'
+import { faEnvelope, faCheckSquare } from '@fortawesome/free-regular-svg-icons'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 
-library.add(faFacebookF, faGoogle, faUserPlus, faSignInAlt, faEnvelope, faLock, faLockOpen)
+library.add(faFacebookF, faGoogle, faUserPlus, faSignInAlt, faEnvelope, faLock, faLockOpen, faCheckSquare)
 
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

@@ -4,7 +4,7 @@
       <v-card-text class="cardTextStyle">
         <div class="text--primary logoFont">Canvas</div>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions v-if="!passwordReset">
         <v-form ref="form" v-model="valid">
           <v-container>
             <v-row>
@@ -34,7 +34,7 @@
                   class="formFont"
                   :disabled="!valid"
                   @submit.prevent
-                  @click="confirmResetPassword"
+                  @click="confirmResetPassword; passwordResetUpdate()"
                   ><font-awesome-icon
                     :icon="['fa', 'sign-in-alt']"
                     class="mr-2 mb-1"
@@ -46,6 +46,22 @@
           </v-container>
         </v-form>
       </v-card-actions>
+      <section class="mt-3" v-else>
+       <v-row>
+        <v-col cols="12">
+          <font-awesome-icon
+                    :icon="['far', 'check-square']"
+                    class="mb-3" color="green"
+                  />
+            <h3 class="formFont mb-3">Your password has been changed.</h3>
+        </v-col>
+      </v-row>
+        <router-link to="/" class="linkStyle"
+          ><v-btn block color="grey darken-1" class="formFont backBtnStyle"
+            >Back To Login</v-btn
+          ></router-link
+        >
+      </section>
     </v-card>
   </v-container>
 </template>
@@ -60,7 +76,8 @@ export default {
       valid: false,
       passwordRules: [v => !!v || 'Password is required'],
       passLockIconClosed: true,
-      seePassword: 'Password'
+      seePassword: 'Password',
+      passwordReset: false
     }
   },
   computed: {
@@ -76,6 +93,10 @@ export default {
         this.seePassword = 'Password'
         this.passLockIconClosed = true
       }
+    },
+    passwordResetUpdate: function () {
+      console.log('link sent')
+      this.passwordReset = true
     }
   }
 }

@@ -47,10 +47,15 @@
       </v-card-actions>
       <v-row v-else>
         <v-col cols="12">
-            hello
+          <font-awesome-icon
+                    :icon="['far', 'check-square']"
+                    class="mb-3" color="green"
+                  />
+            <h2 class="formFont mb-3">Password Reset Email Sent</h2>
+            <p class="formFont">An email was sent to {{email}}. Follow the directions in the email to reset your password.</p>
         </v-col>
       </v-row>
-      <section class="mt-5">
+      <section class="mt-3">
         <router-link to="/" class="linkStyle"
           ><v-btn block color="grey darken-1" class="formFont backBtnStyle"
             >Back To Login</v-btn

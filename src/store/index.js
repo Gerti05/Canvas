@@ -14,9 +14,11 @@ const providerFacebook = new firebase.auth.FacebookAuthProvider()
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  plugins: [createPersistedState({
-    storage: window.sessionStorage
-  })],
+  plugins: [
+    createPersistedState({
+      storage: window.sessionStorage
+    })
+  ],
   state: {
     user: null,
     password: '',
@@ -95,6 +97,7 @@ export default new Vuex.Store({
           user => {
             console.log(user)
             dispatch('addUsername')
+            dispatch('verifyEmailLink')
             alert(`Account created for ${this.state.username}.`)
             router.push('/')
           },
@@ -102,6 +105,16 @@ export default new Vuex.Store({
             alert(err.message)
           }
         )
+    },
+    verifyEmailLink () {
+      const user = app.auth().currentUser
+      user
+        .sendEmailVerification()
+        .then(() => {
+        })
+        .catch(err => {
+          alert(err.message)
+        })
     },
     signOut ({ commit }) {
       app
@@ -140,22 +153,26 @@ export default new Vuex.Store({
       })
     },
     resetPasswordLink ({ state }) {
-      app.auth().sendPasswordResetEmail(state.email).then(() => {
-
-      }).catch(err => {
-        alert(err.message)
-      })
+      app
+        .auth()
+        .sendPasswordResetEmail(state.email)
+        .then(() => {})
+        .catch(err => {
+          alert(err.message)
+        })
     },
     confirmResetPassword ({ state }) {
       let code = router.currentRoute.fullPath
       code = code.split('Code=')
       code = code[1].split('&apiKey')
       code = code[0]
-      app.auth().confirmPasswordReset(code, state.password).then(() => {
-
-      }).catch(err => {
-        alert(err.message)
-      })
+      app
+        .auth()
+        .confirmPasswordReset(code, state.password)
+        .then(() => {})
+        .catch(err => {
+          alert(err.message)
+        })
     }
   },
   modules: {}
