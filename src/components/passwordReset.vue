@@ -34,7 +34,8 @@
                   class="formFont"
                   :disabled="!valid"
                   @submit.prevent
-                  @click="confirmResetPassword; passwordResetUpdate()"
+                  @click="confirmResetPassword();
+                  passwordResetUpdate()"
                   ><font-awesome-icon
                     :icon="['fa', 'sign-in-alt']"
                     class="mr-2 mb-1"

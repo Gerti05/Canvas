@@ -116,6 +116,24 @@ export default new Vuex.Store({
           alert(err.message)
         })
     },
+    handleVerifyEmail (context, actionCode) {
+      // Localize the UI to the selected language as determined by the lang
+      // parameter.
+      // Try to apply the email verification code.
+      console.log(actionCode)
+      app
+        .auth()
+        .applyActionCode(actionCode)
+        .then(() => {
+          // Email address has been verified.
+          console.log('email verified')
+        })
+        .catch(err => {
+          // Code is invalid or expired. Ask the user to verify their email address
+          // again.
+          alert(err.message)
+        })
+    },
     signOut ({ commit }) {
       app
         .auth()
@@ -153,6 +171,8 @@ export default new Vuex.Store({
       })
     },
     resetPasswordLink ({ state }) {
+      console.log(state.email)
+      console.log('iii')
       app
         .auth()
         .sendPasswordResetEmail(state.email)

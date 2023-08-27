@@ -31,7 +31,7 @@
                   :disabled="!valid"
                   @submit.prevent
                   @click="
-                    resetPasswordLink;
+                    resetPasswordLink();
                     linkSentUpdate();
                   "
                   ><font-awesome-icon
@@ -88,7 +88,7 @@ export default {
     }
   },
   computed: {
-    ...mapFields(['email'])
+    ...mapFields(['email', 'password'])
   },
   methods: {
     ...mapActions(['resetPasswordLink']),
